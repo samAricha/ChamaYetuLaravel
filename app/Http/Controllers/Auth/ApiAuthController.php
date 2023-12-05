@@ -20,12 +20,34 @@ class ApiAuthController extends Controller
 
     public function register(RegisterUserRequest $request)
     {
+        $validatedData = $request->validated();
+        // Check for duplicate phone
+        if (User::where('phone', $request['phone'])->exists()) {
+            return $this->error([
+                'message' => 'The phone has already been taken.',
+                'errors' => [
+                    'phone' => ['The phone has already been taken.']
+                ]
+            ], 'Registration failed', 422);
+        }
+
+        // Check for duplicate email
+        if (User::where('email', $request['email'])->exists()) {
+            return $this->error([
+                'message' => 'The email has already been taken.',
+                'email' => ['The email has already been taken.']
+            ], 'Registration failed', 422);
+        }
+
+
+
+
         // Create a new user
         $user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'phone' => $request['phone'],
-            'password' => Hash::make($request['password']),
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'phone' => $validatedData['phone'],
+            'password' => Hash::make($validatedData['password']),
         ]);
 
         // Return success response
@@ -40,9 +62,19 @@ class ApiAuthController extends Controller
     public function login(LoginUserRequest $request)
     {
         $validatedData = $request->validated();
-        $user = User::where('email', $validatedData['username'])
-            ->orWhere('phone', $validatedData['username'])
-            ->first();
+
+        // Check if the input is a phone number
+        if ($this->isPhoneNumber($validatedData['username'])) {
+            // Normalize the phone number (remove country code, format, etc.)
+            $normalizedPhone = $this->normalizePhoneNumber($validatedData['username']);
+            // Search for the user by normalized phone number
+            $user = User::where('phone', $normalizedPhone)->first();
+        } else {
+            // Search for the user by email
+            $user = User::where('email', $validatedData['username'])->first();
+        }
+
+
         if (!$user || !Auth::attempt(['email' => $user->email, 'password' => $validatedData['password']])) {
             return $this->error('', 'Credentials do not match', 401);
         }
@@ -51,6 +83,22 @@ class ApiAuthController extends Controller
             'user' => $user,
             'access_token' => $user->createToken('API Token')->plainTextToken
         ]);
+    }
+
+    function isPhoneNumber($value)
+    {
+        // Check if $value is a valid numeric string
+        return ctype_digit($value);
+    }
+    function normalizePhoneNumber($phoneNumber)
+    {
+        // Extract the last nine digits
+        $lastNineDigits = substr($phoneNumber, -9);
+
+        // Add "254" prefix
+        $normalizedPhoneNumber = '254' . $lastNineDigits;
+
+        return $normalizedPhoneNumber;
     }
 
     public function logout()

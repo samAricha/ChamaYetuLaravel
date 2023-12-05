@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\MemberController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/auth/register', [ApiAuthController::class, 'register']);
 Route::post('/auth/login', [ApiAuthController::class, 'login']);
+
+
+
+Route::post('/save/member', [MemberController::class, 'createMember']);
+Route::post('/save/contribution', [ContributionController::class, 'store']);
