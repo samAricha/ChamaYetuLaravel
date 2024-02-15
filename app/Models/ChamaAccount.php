@@ -28,7 +28,7 @@ class ChamaAccount extends Model
 
     public function accountTypes()
     {
-        return $this->hasMany(AccountType::class);
+        return $this->belongsTo(AccountType::class);
     }
 
 }
