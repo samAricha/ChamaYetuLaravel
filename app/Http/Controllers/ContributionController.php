@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ContributionController extends Controller
 {
+    public function index()
+    {
+
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -29,5 +34,23 @@ class ContributionController extends Controller
             // Log the exception if needed
             return response()->json(['success' => false, 'message' => 'Error adding contribution'], 500);
         }
+    }
+
+
+
+    public function show($id)
+    {
+
+    }
+
+
+    public function update(Request $request, $id)
+    {
+
+    }
+
+    public function destroy($id)
+    {
+
     }
 }
