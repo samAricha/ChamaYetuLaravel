@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\ApiAuthController;
+use App\Http\Controllers\ChamaAccountController;
+use App\Http\Controllers\ChamaController;
+use App\Http\Controllers\ChamaMembersController;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\MemberController;
 use Illuminate\Http\Request;
@@ -28,3 +31,23 @@ Route::post('/auth/login', [ApiAuthController::class, 'login']);
 
 Route::post('/save/member', [MemberController::class, 'createMember']);
 Route::post('/save/contribution', [ContributionController::class, 'store']);
+
+Route::prefix('chamaas')->group(function () {
+    Route::apiResource('', ChamaController::class);
+});
+
+Route::prefix('chamaa_accounts')->group(function () {
+    Route::apiResource('', ChamaAccountController::class);
+});
+
+Route::prefix('members')->group(function () {
+    Route::apiResource('', MemberController::class);
+});
+
+Route::prefix('chamaa_members')->group(function () {
+    Route::apiResource('', ChamaMembersController::class);
+});
+
+Route::prefix('contributions')->group(function () {
+    Route::apiResource('', ContributionController::class);
+});
