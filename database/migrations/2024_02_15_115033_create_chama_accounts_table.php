@@ -9,14 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('contributions', function (Blueprint $table) {
+        Schema::create('chama_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('member_id');
-            $table->string('chama_account_id');
-            $table->date('contribution_date');
-            $table->decimal('contribution_amount', 10, 2);
+            $table->string('chama_id');
+            $table->string('name');
+            // Add more columns as needed
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contributions');
+        Schema::dropIfExists('chama_accounts');
     }
 };

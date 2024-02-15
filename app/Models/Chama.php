@@ -9,7 +9,11 @@ class Chama extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['chama_name', 'chama_description', 'date_formed'];
+    protected $fillable = [
+        'chama_name',
+        'chama_description',
+        'date_formed'
+    ];
 
     public function members()
     {
