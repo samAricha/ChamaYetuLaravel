@@ -21,8 +21,8 @@ class Contribution extends Model
         return $this->belongsTo(Member::class);
     }
 
-    public function account()
+    public function chamaaAccount()
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(ChamaAccount::class);
     }
 }

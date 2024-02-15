@@ -11,13 +11,19 @@ class Transaction extends Model
 
     protected $fillable = [
         'member_id',
+        'chama_account_id',
         'transaction_date',
-        'transaction_type',
+        'transaction_type_id',
         'amount'
     ];
 
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(TransactionType::class);
     }
 }

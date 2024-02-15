@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
-            $table->string('chama_id');
             $table->string('member_id');
+            $table->string('chama_account_id');
             $table->decimal('loan_amount', 10, 2);
             $table->decimal('interest_rate', 5, 2);
             $table->date('loan_date');

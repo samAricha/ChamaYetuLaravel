@@ -13,6 +13,7 @@ class ChamaAccount extends Model
     protected $fillable = [
         'chama_id',
         'account_name',
+        'account_type_id',
     ];
 
     public function chama()
@@ -23,6 +24,11 @@ class ChamaAccount extends Model
     public function contributions()
     {
         return $this->hasMany(Contribution::class);
+    }
+
+    public function accountTypes()
+    {
+        return $this->hasMany(AccountType::class);
     }
 
 }

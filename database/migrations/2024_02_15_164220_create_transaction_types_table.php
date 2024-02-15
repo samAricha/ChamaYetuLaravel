@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('transaction_types', function (Blueprint $table) {
             $table->id();
-            $table->string('member_id');
-            $table->string('chama_account_id');
-            $table->date('transaction_date');
-            $table->string('transaction_type_id'); // e.g., deposit, withdrawal, loan repayment
-            $table->decimal('amount', 10, 2);
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('transaction_types');
     }
 };

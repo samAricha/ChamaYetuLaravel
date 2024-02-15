@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('chama_id');
             $table->string('account_name');
+            $table->string('account_type_id');
             $table->timestamps();
         });
     }

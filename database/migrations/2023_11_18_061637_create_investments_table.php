@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('investments', function (Blueprint $table) {
             $table->id();
-            $table->string('chama_id');
+            $table->string('member_id');
+            $table->string('chama_account_id');
             $table->text('investment_description');
             $table->decimal('investment_amount', 10, 2);
             $table->date('investment_date');
