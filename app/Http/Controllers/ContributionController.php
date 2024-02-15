@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contribution;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ContributionController extends Controller
 {
+    use HttpResponses;
+
     public function index()
     {
 
@@ -14,26 +18,36 @@ class ContributionController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'memberId' => 'required|string',
-            'chamaId' => 'required|integer',
-            'contributionDate' => 'required|date',
-            'contributionAmount' => 'required|numeric',
-        ]);
-
         try {
-            Contribution::create([
-                'member_id' => $validatedData['memberId'],
-                'chama_id' => $validatedData['chamaId'],
-                'contribution_date' => $validatedData['contributionDate'],
-                'contribution_amount' => $validatedData['contributionAmount'],
+            // Validate the incoming request
+            $request->validate([
+                'member_id' => 'required|exists:members,id',
+                'chama_account_id' => 'required|exists:chama_accounts,id',
+                'contribution_date' => 'required|date',
+                'contribution_amount' => 'required|numeric|min:0',
             ]);
 
-            return response()->json(['success' => true, 'message' => 'Contribution added successfully']);
+            // Create a new Contribution instance
+            $contribution = new Contribution();
+            $contribution->fill($request->all());
+            $contribution->save();
+
+            return $this->success(
+                $contribution,
+                'Contribution saved successfully',
+                Response::HTTP_OK
+            );
+
+
         } catch (\Exception $e) {
-            // Log the exception if needed
-            return response()->json(['success' => false, 'message' => 'Error adding contribution'], 500);
+            return $this->error(
+                $e->getMessage(),
+                'Error saving contribution',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
+
+
     }
 
 

@@ -45,7 +45,7 @@ class ChamaController extends Controller
 
         } catch (\Exception $e) {
             return $this->error(
-                null,
+                $e->getMessage(),
                 'Error saving Chamaa',
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
