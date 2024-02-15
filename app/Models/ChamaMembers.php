@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ChamaMembers extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'chama_id',
+        'member_id',
+    ];
 }

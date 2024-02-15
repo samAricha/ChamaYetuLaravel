@@ -46,6 +46,8 @@ Route::prefix('members')->group(function () {
 
 Route::prefix('chamaa_members')->group(function () {
     Route::apiResource('', ChamaMembersController::class);
+    Route::post('add/member/{chamaa_id}', [ChamaMembersController::class, 'addMember']);
+
 });
 
 Route::prefix('contributions')->group(function () {
