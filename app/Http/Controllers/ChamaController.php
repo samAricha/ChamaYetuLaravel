@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chama;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ChamaController extends Controller
 {
+    use HttpResponses;
+
     public function index()
     {
 
@@ -19,23 +23,33 @@ class ChamaController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the incoming request
-        $request->validate([
-            'chama_name' => 'required|string',
-            'chama_description' => 'required|string',
-            'date_formed' => 'required|date',
-        ]);
+        try {
+            // Validate the incoming request
+            $request->validate([
+                'chama_name' => 'required|string',
+                'chama_description' => 'required|string',
+                'date_formed' => 'required|date',
+            ]);
 
-        // Create a new chama instance
-        $chama = new Chama();
-        $chama->fill($request->all());
-        $chama->save();
+            // Create a new chama instance
+            $chama = new Chama();
+            $chama->fill($request->all());
+            $chama->save();
 
-        // Return a response indicating success
-        return response()->json([
-            'message' => 'Chama created successfully',
-            'chama' => $chama
-        ], 201);
+            return $this->success(
+                $chama,
+                'Chama created successfully',
+                Response::HTTP_OK
+            );
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                null,
+                'Error saving Chamaa',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
     }
 

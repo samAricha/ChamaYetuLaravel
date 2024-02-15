@@ -10,6 +10,10 @@ class ChamaAccount extends Model
     use HasFactory;
 
     protected $table = 'chama_accounts';
+    protected $fillable = [
+        'chama_id',
+        'account_name',
+    ];
 
     public function chama()
     {

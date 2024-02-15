@@ -35,7 +35,7 @@ class ChamaMembersController extends Controller
         return response()->json([
             'message' => 'Member created successfully',
             'member' => $member,
-            'chama' => $chama
+            'chamaa' => $chama
         ], 201);
     }
 

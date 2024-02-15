@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('chama_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('chama_id');
-            $table->string('name');
-            // Add more columns as needed
+            $table->string('account_name');
             $table->timestamps();
         });
     }
