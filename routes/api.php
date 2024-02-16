@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\ChamaAccountController;
 use App\Http\Controllers\ChamaController;
 use App\Http\Controllers\ChamaMembersController;
 use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\InvestmentController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TransactionTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +37,8 @@ Route::post('/auth/login', [ApiAuthController::class, 'login']);
 Route::post('/save/member', [MemberController::class, 'createMember']);
 Route::post('/save/contribution', [ContributionController::class, 'store']);
 
+
+
 Route::prefix('chamaas')->group(function () {
     Route::apiResource('', ChamaController::class);
 });
@@ -52,4 +59,24 @@ Route::prefix('chamaa_members')->group(function () {
 
 Route::prefix('contributions')->group(function () {
     Route::apiResource('', ContributionController::class);
+});
+
+Route::prefix('investments')->group(function () {
+    Route::apiResource('', InvestmentController::class);
+});
+
+Route::prefix('loans')->group(function () {
+    Route::apiResource('', LoanController::class);
+});
+
+Route::prefix('transactions')->group(function () {
+    Route::apiResource('', TransactionController::class);
+});
+
+Route::prefix('account_types')->group(function () {
+    Route::apiResource('', AccountTypeController::class);
+});
+
+Route::prefix('transaction_types')->group(function () {
+    Route::apiResource('', TransactionTypeController::class);
 });
