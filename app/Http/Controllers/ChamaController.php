@@ -13,7 +13,23 @@ class ChamaController extends Controller
 
     public function index()
     {
+        try {
+            $chamaas =  Chama::all();
 
+            return $this->success(
+                $chamaas,
+                'Chamaas successfully fetched',
+                Response::HTTP_OK
+            );
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error fetching Chamaas',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     public function show($id)

@@ -14,7 +14,23 @@ class ChamaAccountController extends Controller
 
     public function index()
     {
+        try {
+            $chamaaAccounts =  ChamaAccount::all();
 
+            return $this->success(
+                $chamaaAccounts,
+                'Accounts successfully fetched',
+                Response::HTTP_OK
+            );
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error fetching Accounts',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     public function show($id)

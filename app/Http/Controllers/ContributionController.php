@@ -13,7 +13,23 @@ class ContributionController extends Controller
 
     public function index()
     {
+        try {
+            $contributions =  Contribution::all();
 
+            return $this->success(
+                $contributions,
+                'contributions successfully fetched',
+                Response::HTTP_OK
+            );
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error fetching contributions',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     public function store(Request $request)

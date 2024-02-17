@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chama;
+use App\Models\ChamaMembers;
 use App\Models\Member;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -53,10 +54,25 @@ class ChamaMembersController extends Controller
         }
     }
 
-
     public function index()
     {
+        try {
+            $chamaaMembers =  ChamaMembers::all();
 
+            return $this->success(
+                $chamaaMembers,
+                'Chamaa members successfully fetched',
+                Response::HTTP_OK
+            );
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error fetching Chamaa members',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     public function show($id)
