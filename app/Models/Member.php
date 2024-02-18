@@ -9,7 +9,12 @@ class Member extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['first_name', 'last_name', 'contact_information', 'date_joined'];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'contact_information',
+        'date_joined'
+    ];
 
     public function chamas()
     {

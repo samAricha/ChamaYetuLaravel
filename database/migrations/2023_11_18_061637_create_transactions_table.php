@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('member_id')->constrained();
+            $table->string('member_id');
+            $table->string('chama_account_id');
             $table->date('transaction_date');
-            $table->string('transaction_type'); // e.g., deposit, withdrawal, loan repayment
+            $table->string('transaction_type_id'); // e.g., deposit, withdrawal, loan repayment
             $table->decimal('amount', 10, 2);
             $table->timestamps();
         });

@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chama;
+use App\Models\ChamaAccount;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class ChamaController extends Controller
+class ChamaAccountController extends Controller
 {
+
     use HttpResponses;
 
     public function index()
     {
         try {
-            $chamaas =  Chama::all();
+            $chamaaAccounts =  ChamaAccount::all();
 
             return $this->success(
-                $chamaas,
-                'Chamaas successfully fetched',
+                $chamaaAccounts,
+                'Accounts successfully fetched',
                 Response::HTTP_OK
             );
 
@@ -26,7 +27,7 @@ class ChamaController extends Controller
         } catch (\Exception $e) {
             return $this->error(
                 $e->getMessage(),
-                'Error fetching Chamaas',
+                'Error fetching Accounts',
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -42,19 +43,18 @@ class ChamaController extends Controller
         try {
             // Validate the incoming request
             $request->validate([
-                'chama_name' => 'required|string',
-                'chama_description' => 'required|string',
-                'date_formed' => 'required|date',
+                'chama_id' => 'required|exists:chamas,id',
+                'account_name' => 'required|string',
             ]);
 
-            // Create a new chama instance
-            $chama = new Chama();
-            $chama->fill($request->all());
-            $chama->save();
+            // Create a new ChamaAccount instance
+            $chamaAccount = new ChamaAccount();
+            $chamaAccount->fill($request->all());
+            $chamaAccount->save();
 
             return $this->success(
-                $chama,
-                'Chama created successfully',
+                $chamaAccount,
+                'Chama account created successfully',
                 Response::HTTP_OK
             );
 
@@ -62,7 +62,7 @@ class ChamaController extends Controller
         } catch (\Exception $e) {
             return $this->error(
                 $e->getMessage(),
-                'Error saving Chamaa',
+                'Error creating chamaa account',
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contribution;
-use App\Models\Investment;
+use App\Models\TransactionType;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class InvestmentController extends Controller
+class TransactionTypeController extends Controller
 {
     use HttpResponses;
 
     public function index()
     {
         try {
-            $investments =  Investment::all();
+            $transactionTypes =  TransactionType::all();
 
             return $this->success(
-                $investments,
-                'investments successfully fetched',
+                $transactionTypes,
+                'Transaction Types successfully fetched',
                 Response::HTTP_OK
             );
 
@@ -27,7 +26,7 @@ class InvestmentController extends Controller
         } catch (\Exception $e) {
             return $this->error(
                 $e->getMessage(),
-                'Error fetching investments',
+                'Error fetching Transaction Types',
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
