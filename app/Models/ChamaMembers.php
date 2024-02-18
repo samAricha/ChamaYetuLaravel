@@ -5,15 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class ChamaMembers extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'role_name'
-    ];
 
-    public function members()
-    {
-        return $this->belongsToMany(Member::class, 'chama_roles');
-    }
+    protected $fillable = [
+        'chama_id',
+        'member_id',
+    ];
 }

@@ -9,7 +9,13 @@ class Investment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['chama_id', 'investment_description', 'investment_amount', 'investment_date'];
+    protected $fillable = [
+        'member_id',
+        'chama_account_id',
+        'investment_description',
+        'investment_amount',
+        'investment_date'
+    ];
 
     public function chama()
     {

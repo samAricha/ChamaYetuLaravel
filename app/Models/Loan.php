@@ -9,7 +9,14 @@ class Loan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['chama_id', 'member_id', 'loan_amount', 'interest_rate', 'loan_date', 'loan_status'];
+    protected $fillable = [
+        'member_id',
+        'chama_account_id',
+        'loan_amount',
+        'interest_rate',
+        'loan_date',
+        'loan_status'
+    ];
 
     public function chama()
     {

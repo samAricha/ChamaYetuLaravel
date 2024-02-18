@@ -9,15 +9,20 @@ class Contribution extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['member_id', 'chama_id', 'contribution_date', 'contribution_amount'];
+    protected $fillable = [
+        'member_id',
+        'chama_account_id',
+        'contribution_date',
+        'contribution_amount'
+    ];
 
     public function member()
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function chama()
+    public function chamaaAccount()
     {
-        return $this->belongsTo(Chama::class);
+        return $this->belongsTo(ChamaAccount::class);
     }
 }
