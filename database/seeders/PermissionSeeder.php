@@ -13,9 +13,39 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::create(['name' => 'view users']);
-        Permission::create(['name' => 'create users']);
-        Permission::create(['name' => 'edit users']);
-        Permission::create(['name' => 'delete users']);
+        Permission::create([
+            'name' => 'view users',
+            'guard_name' => 'api',
+        ]);
+        Permission::create([
+            'name' => 'create users',
+            'guard_name' => 'api',
+        ]);
+        Permission::create([
+            'name' => 'edit users',
+            'guard_name' => 'api',
+        ]);
+        Permission::create([
+            'name' => 'delete users',
+            'guard_name' => 'api',
+        ]);
+        Permission::create([
+            'name' => 'add contribution',
+            'guard_name' => 'api',
+        ]);
+        Permission::create([
+            'name' => 'create members',
+            'guard_name' => 'api',
+        ]);
+        Permission::create([
+            'name' => 'create chamaas',
+            'guard_name' => 'api',
+        ]);
+        Permission::create([
+            'name' => 'create chamaa accounts',
+            'guard_name' => 'api',
+        ]);
+
+
     }
 }
