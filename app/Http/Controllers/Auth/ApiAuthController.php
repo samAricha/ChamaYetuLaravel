@@ -31,21 +31,20 @@ class ApiAuthController extends Controller
             ]);
             // Check for duplicate phone
             if (User::where('phone', $validatedData['phone'])->exists()) {
-                return $this->error([
-                    'message' => 'The phone has already been taken.',
-                    'errors' => [
-                        'phone' => ['The phone has already been taken.']
-                    ]
-                ], 'Registration failed', 422);
+                return $this->error(
+                    null,
+                    'The phone has already been taken.',
+                    422
+                );
             }
 
             // Check for duplicate email
             if (User::where('email', $validatedData['email'])->exists()) {
-                return $this->error([
-                    'errors' => [
-                        'email' => ['The email has already been taken.']
-                    ]
-                ], 'Registration failed', 422);
+                return $this->error(
+                    null,
+                    'The email has already been taken.',
+                    422
+                );
             }
 
 
@@ -67,9 +66,10 @@ class ApiAuthController extends Controller
 
         } catch (\Exception $e) {
             return $this->error(
-                $e->getMessage(),
+                null,
                 'Error creating user',
-                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
+                $e->getMessage(),
             );
         }
     }
