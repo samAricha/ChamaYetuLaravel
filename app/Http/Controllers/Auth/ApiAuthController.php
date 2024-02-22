@@ -118,9 +118,10 @@ class ApiAuthController extends Controller
 
         } catch (\Exception $e) {
             return $this->error(
+                null,
                 $e->getMessage(),
+                $e->getCode(),
                 'Error login in',
-                $e->getCode()
             );
         }
 
