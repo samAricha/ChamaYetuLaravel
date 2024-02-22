@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Contracts\Validation\Validator;
+
 trait HttpResponses {
 
     protected function success($data, string $message = null, int $code = 200)
@@ -23,4 +25,6 @@ trait HttpResponses {
             'data' => $data
         ], $code);
     }
+
+
 }

@@ -9,8 +9,10 @@ use App\Models\User;
 use App\Traits\HttpResponses;
 use http\Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ApiAuthController extends Controller
 {
@@ -20,69 +22,108 @@ class ApiAuthController extends Controller
 
     public function register(RegisterUserRequest $request)
     {
-        $validatedData = $request->validated();
-        // Check for duplicate phone
-        if (User::where('phone', $request['phone'])->exists()) {
-            return $this->error([
-                'message' => 'The phone has already been taken.',
-                'errors' => [
-                    'phone' => ['The phone has already been taken.']
-                ]
-            ], 'Registration failed', 422);
+        try {
+            $validatedData = $request->validated();
+            $validated = $request->validate([
+                'email' => ['required'],
+                'name' => ['required'],
+                'phone' => ['required'],
+            ]);
+            // Check for duplicate phone
+            if (User::where('phone', $validatedData['phone'])->exists()) {
+                return $this->error([
+                    'message' => 'The phone has already been taken.',
+                    'errors' => [
+                        'phone' => ['The phone has already been taken.']
+                    ]
+                ], 'Registration failed', 422);
+            }
+
+            // Check for duplicate email
+            if (User::where('email', $validatedData['email'])->exists()) {
+                return $this->error([
+                    'errors' => [
+                        'email' => ['The email has already been taken.']
+                    ]
+                ], 'Registration failed', 422);
+            }
+
+
+            // Create a new user
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'phone' => $validatedData['phone'],
+                'password' => Hash::make($validatedData['password']),
+            ]);
+            $user->assignRole('user');
+
+            // Return success response
+            return $this->success([
+                'user' => $user,
+                'access_token' => $user->createToken('API Token')->plainTextToken
+            ]);
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error creating user',
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
-
-        // Check for duplicate email
-        if (User::where('email', $request['email'])->exists()) {
-            return $this->error([
-                'message' => 'The email has already been taken.',
-                'email' => ['The email has already been taken.']
-            ], 'Registration failed', 422);
-        }
-
-
-
-
-        // Create a new user
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'phone' => $validatedData['phone'],
-            'password' => Hash::make($validatedData['password']),
-        ]);
-
-        // Return success response
-        return $this->success([
-            'user' => $user,
-            'access_token' => $user->createToken('API Token')->plainTextToken
-        ]);
     }
 
 
 
     public function login(LoginUserRequest $request)
     {
-        $validatedData = $request->validated();
+        try {
+            $validatedData = $request->validated();
 
-        // Check if the input is a phone number
-        if ($this->isPhoneNumber($validatedData['username'])) {
-            // Normalize the phone number (remove country code, format, etc.)
-            $normalizedPhone = $this->normalizePhoneNumber($validatedData['username']);
-            // Search for the user by normalized phone number
-            $user = User::where('phone', $normalizedPhone)->first();
-        } else {
-            // Search for the user by email
-            $user = User::where('email', $validatedData['username'])->first();
+
+            $validated = $request->validate([
+                'password' => ['required'],
+                'username' => ['required'],
+            ]);
+
+            $user = null;
+
+
+            // Check if the input is a phone number
+            if ($this->isPhoneNumber($validatedData['username'])) {
+                // Normalize the phone number (remove country code, format, etc.)
+                $normalizedPhone = $this->normalizePhoneNumber($validatedData['username']);
+                // Search for the user by normalized phone number
+                $user = User::with('roles')->where('phone', $normalizedPhone)->first();
+            } else {
+                // Search for the user by email
+                $user = User::with('roles')->where('email', $validatedData['username'])->first();
+            }
+
+            if (!$user) {
+                return $this->error('User not found.', 'Login failed', 404);
+            }
+
+
+            if (!$user || !Auth::attempt(['email' => $user->email, 'password' => $validatedData['password']])) {
+                return $this->error('', 'Credentials do not match', 401);
+            }
+
+            return $this->success([
+                'user' => $user,
+                'access_token' => $user->createToken('API Token')->plainTextToken
+            ]);
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error login in',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-
-        if (!$user || !Auth::attempt(['email' => $user->email, 'password' => $validatedData['password']])) {
-            return $this->error('', 'Credentials do not match', 401);
-        }
-
-        return $this->success([
-            'user' => $user,
-            'access_token' => $user->createToken('API Token')->plainTextToken
-        ]);
     }
 
     function isPhoneNumber($value)
