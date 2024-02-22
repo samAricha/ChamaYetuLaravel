@@ -56,6 +56,7 @@ class ApiAuthController extends Controller
                 'phone' => $validatedData['phone'],
                 'password' => Hash::make($validatedData['password']),
             ]);
+            $user->assignRole('user');
 
             // Return success response
             return $this->success([
@@ -94,10 +95,10 @@ class ApiAuthController extends Controller
                 // Normalize the phone number (remove country code, format, etc.)
                 $normalizedPhone = $this->normalizePhoneNumber($validatedData['username']);
                 // Search for the user by normalized phone number
-                $user = User::where('phone', $normalizedPhone)->first();
+                $user = User::with('roles')->where('phone', $normalizedPhone)->first();
             } else {
                 // Search for the user by email
-                $user = User::where('email', $validatedData['username'])->first();
+                $user = User::with('roles')->where('email', $validatedData['username'])->first();
             }
 
             if (!$user) {
