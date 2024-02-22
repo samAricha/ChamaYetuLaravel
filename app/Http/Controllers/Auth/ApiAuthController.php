@@ -67,9 +67,9 @@ class ApiAuthController extends Controller
         } catch (\Exception $e) {
             return $this->error(
                 null,
-                'Error creating user',
-                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
                 $e->getMessage(),
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
+                'Error creating user',
             );
         }
     }
