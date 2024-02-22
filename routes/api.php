@@ -30,13 +30,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/auth/register', [ApiAuthController::class, 'register']);
-Route::get('/auth/try', [ApiAuthController::class, 'try1']);
 Route::post('/auth/login', [ApiAuthController::class, 'login']);
 
 
 
 Route::post('/save/member', [MemberController::class, 'createMember']);
 Route::post('/save/contribution', [ContributionController::class, 'store']);
+
+
+// Protected routes (require authentication)
+Route::middleware('auth:sanctum')->group(function () {
+    // Define your protected routes here
+});
 
 
 //Route::middleware(['auth:api', 'role:admin'])->group(function () {
@@ -72,7 +77,7 @@ Route::post('/save/contribution', [ContributionController::class, 'store']);
         Route::apiResource('', LoanController::class);
     });
 
-    Route::prefix('transactions')->group(function () {
+    Route::prefix('transactions')->middleware('auth:sanctum')->group(function () {
         Route::apiResource('', TransactionController::class);
     });
 
@@ -80,7 +85,7 @@ Route::post('/save/contribution', [ContributionController::class, 'store']);
         Route::apiResource('', AccountTypeController::class);
     });
 
-    Route::prefix('transaction_types')->group(function () {
+    Route::prefix('transaction_types')->middleware('auth:sanctum')->group(function () {
         Route::apiResource('', TransactionTypeController::class);
     });
 

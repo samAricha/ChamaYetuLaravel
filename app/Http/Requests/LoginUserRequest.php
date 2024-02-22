@@ -23,7 +23,7 @@ class LoginUserRequest extends FormRequest
     {
 
         return [
-            'username' => ['string', new UsernameValidationRule()],
+            'username' => ['required', new UsernameValidationRule()],
             'password' => ['string', 'min:6']
         ];
     }

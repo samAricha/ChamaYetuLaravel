@@ -77,16 +77,17 @@ class ApiAuthController extends Controller
 
     public function login(LoginUserRequest $request)
     {
-
         try {
             $validatedData = $request->validated();
 
 
             $validated = $request->validate([
-                'email' => ['required'],
+                'password' => ['required'],
                 'username' => ['required'],
             ]);
-//            return $validated;
+
+            $user = null;
+
 
             // Check if the input is a phone number
             if ($this->isPhoneNumber($validatedData['username'])) {
