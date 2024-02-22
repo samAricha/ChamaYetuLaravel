@@ -68,7 +68,7 @@ class ApiAuthController extends Controller
             return $this->error(
                 null,
                 $e->getMessage(),
-                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
+                Response::HTTP_OK,
                 'Error creating user',
             );
         }
@@ -120,7 +120,7 @@ class ApiAuthController extends Controller
             return $this->error(
                 $e->getMessage(),
                 'Error login in',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                $e->getCode()
             );
         }
 

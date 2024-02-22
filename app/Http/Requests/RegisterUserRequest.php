@@ -6,6 +6,7 @@ use App\Rules\PhoneValidationRule;
 use App\Traits\HttpResponses;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rules;
 
 
@@ -34,6 +35,10 @@ class RegisterUserRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         // Use methods from your HttpResponses trait to format the error response
-        return $this->error([$validator->errors()->all()], 'Validation Error', 422);
+        return $this->error(
+            [$validator->errors()->all()],
+            'Validation Error',
+            Response::HTTP_OK
+        );
     }
 }
