@@ -38,13 +38,9 @@ Route::post('/save/member', [MemberController::class, 'createMember']);
 Route::post('/save/contribution', [ContributionController::class, 'store']);
 
 
-// Protected routes (require authentication)
-Route::middleware('auth:sanctum')->group(function () {
-    // Define your protected routes here
-});
-
 
 //Route::middleware(['auth:api', 'role:admin'])->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::prefix('chamaas')->group(function () {
@@ -90,4 +86,4 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-//});
+});
