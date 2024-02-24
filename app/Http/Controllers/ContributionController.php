@@ -25,12 +25,12 @@ class ContributionController extends Controller
                 // Check if the user has any roles
                 if ($user->roles->isNotEmpty()) {
                     // Assuming you're interested in the first role
-                    $roleId = $user->roles->first()->id;
+                    $userRoles = $user->roles->pluck('id');
 
-                    if ($roleId !== 4){
+                    if (!$userRoles->contains(4)) {
                         return $this->error(
                             null,
-                            'Unauthorised User',
+                            'Unauthorized User',
                             ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
                         );
                     }
