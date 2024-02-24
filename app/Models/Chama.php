@@ -17,7 +17,7 @@ class Chama extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('role_id');
+        return $this->belongsToMany(User::class, 'chama_user')->withPivot('role_id');
     }
 
     public function roles()

@@ -6,6 +6,7 @@ use App\Models\Chama;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ChamaController extends Controller
 {
@@ -15,6 +16,7 @@ class ChamaController extends Controller
     {
         try {
             $chamaas =  Chama::all();
+
 
             return $this->success(
                 $chamaas,
@@ -51,6 +53,12 @@ class ChamaController extends Controller
             $chama = new Chama();
             $chama->fill($request->all());
             $chama->save();
+
+            // Get User-id of requester
+            $userId = Auth::id();
+            // Attach the user to the chamaa role
+            $chama->users()->attach($userId, ['role_id' => 3]);
+
 
             return $this->success(
                 $chama,

@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function chamas()
     {
-        return $this->belongsToMany(Chama::class)->withPivot('role_id');
+        return $this->belongsToMany(Chama::class, 'chama_user')->withPivot('role_id');
     }
 
 }
