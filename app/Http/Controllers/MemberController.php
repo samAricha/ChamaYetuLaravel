@@ -18,16 +18,27 @@ class MemberController extends Controller
     {
         $requestData = $request->all();
 
-        // Create a new user
-        $user = User::create([
-            'name' => $requestData['name'],
-            'email' => $requestData['email'],
-            'phone' => $requestData['contactInformation'],
-            'password' => Hash::make($requestData['password']),
-        ]);
-        $user->assignRole('user');
+        // Check if a user with the provided phone number already exists
+        $existingUser = User::where('phone', $requestData['contactInformation'])->first();
+
+        // If a user with the phone number exists, use their ID for the member
+        if ($existingUser) {
+            $userId = $existingUser->id;
+        } else {
+            // If the user doesn't exist, create a new user
+            $user = User::create([
+                'name' => $requestData['name'],
+                'email' => $requestData['email'],
+                'phone' => $requestData['contactInformation'],
+                'password' => Hash::make($requestData['password']),
+            ]);
+            $user->assignRole('user');
+
+            $userId = $user->id;
+        }
 
         $member = new Member();
+        $member->user_id = $userId;
         $member->first_name = $requestData['firstName'];
         $member->last_name = $requestData['lastName'];
         $member->contact_information = $requestData['contactInformation'];
