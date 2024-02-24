@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -20,6 +21,35 @@ class ChamaMembersController extends Controller
     public function addMember(Request $request, $chamaId)
     {
         try {
+            $userId = Auth::id();
+            // Assuming $chamaId holds the Chama ID you have
+            $chama = Chama::findOrFail($chamaId);
+
+            // Check if the user is associated with this chama
+            if ($chama->users()->wherePivot('user_id', $userId)->exists()) {
+                // Now, you can retrieve the pivot record for this user and chama
+                $pivotRecord = $chama->users()->wherePivot('user_id', $userId)->first()->pivot;
+
+                // Now, you can get the role ID associated with this user in the context of the chama
+                $roleId = $pivotRecord->role_id;
+
+                if ($roleId < 3){
+                    return $this->error(
+                        null,
+                        'Unauthorised User',
+                        ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                    );
+                }
+            } else {
+                return $this->error(
+                    null,
+                    'Unauthorised User',
+                    ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
+
+
             // Validate the incoming request
             $request->validate([
                 'first_name' => 'required|string',
