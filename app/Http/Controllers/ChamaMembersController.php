@@ -57,9 +57,9 @@ class ChamaMembersController extends Controller
                 // Member already exists, update their information if necessary
                 $existingMember->update($request->all());
 
-                // Attach the existing member to the chama if not already attached
-                if (!$existingMember->chamas()->where('chama_id', $chamaId)->exists()) {
-                    $chama = Chama::findOrFail($chamaId);
+                // Check if the member is already attached to this chama
+                if (!$chama->members()->where('member_id', $existingMember->id)->exists()) {
+                    // If not attached, attach the member to this chama
                     $chama->members()->attach($existingMember->id);
                 }
 
