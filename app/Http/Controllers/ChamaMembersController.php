@@ -29,7 +29,6 @@ class ChamaMembersController extends Controller
                 // Add other validation rules as needed
             ]);
 
-
             // Check if a user with the provided phone number already exists
             $existingUser = User::where('phone', $request['phone'])->first();
 
@@ -85,7 +84,6 @@ class ChamaMembersController extends Controller
                     ResponseAlias::HTTP_OK
                 );
             }
-
 
         } catch (\Exception $e) {
             return $this->error(

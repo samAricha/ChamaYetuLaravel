@@ -7,6 +7,7 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ChamaController extends Controller
 {
@@ -63,7 +64,7 @@ class ChamaController extends Controller
             return $this->success(
                 $chama,
                 'Chama created successfully',
-                Response::HTTP_OK
+                ResponseAlias::HTTP_OK
             );
 
 
@@ -71,7 +72,7 @@ class ChamaController extends Controller
             return $this->error(
                 $e->getMessage(),
                 'Error saving Chamaa',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
