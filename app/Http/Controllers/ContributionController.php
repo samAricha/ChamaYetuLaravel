@@ -18,6 +18,37 @@ class ContributionController extends Controller
     public function index()
     {
         try {
+            // Get the currently authenticated user
+            $user = Auth::user();
+
+            if ($user) {
+                // Check if the user has any roles
+                if ($user->roles->isNotEmpty()) {
+                    // Assuming you're interested in the first role
+                    $roleId = $user->roles->first()->id;
+
+                    if ($roleId !== 4){
+                        return $this->error(
+                            null,
+                            'Unauthorised User',
+                            ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }
+                } else {
+                    return $this->error(
+                        null,
+                        'Unauthorised User',
+                        ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                    );
+                }
+            } else {
+                return $this->error(
+                    null,
+                    'Unauthenticated User',
+                    ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
             $contributions =  Contribution::all();
 
             return $this->success(
@@ -108,7 +139,7 @@ class ContributionController extends Controller
 
 
 
-    public function show($accountId)
+    public function show($contributionId)
     {
 
     }
