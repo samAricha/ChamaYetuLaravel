@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('user_id')->unique();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('phone');
+            $table->string('phone')->unique();
             $table->date('date_joined');
             $table->timestamps();
         });

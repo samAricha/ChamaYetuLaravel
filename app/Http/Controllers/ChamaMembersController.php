@@ -10,6 +10,7 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ChamaMembersController extends Controller
 {
@@ -46,31 +47,51 @@ class ChamaMembersController extends Controller
                 $userId = $user->id;
             }
 
-            // Retrieve the chama instance
+            // Retrieve the chamaa instance
             $chama = Chama::findOrFail($chamaId);
 
-            // Create the new member
-            $member = new Member();
-            $member->fill($request->all());
-            $member->user_id = $userId;
-            $member->save();
+            // Check if a member with the provided phone number already exists
+            $existingMember = Member::where('phone', $request['phone'])->first();
 
-            // Attach the member to the chama
-            $chama->members()->attach($member->id);
+            if ($existingMember) {
+                // Member already exists, update their information if necessary
+                $existingMember->update($request->all());
 
+                // Attach the existing member to the chama if not already attached
+                if (!$existingMember->chamas()->where('chama_id', $chamaId)->exists()) {
+                    $chama = Chama::findOrFail($chamaId);
+                    $chama->members()->attach($existingMember->id);
+                }
 
-            return $this->success(
-                $member,
-                'Member created successfully',
-                Response::HTTP_OK
-            );
+                return $this->success(
+                    $existingMember,
+                    'Member updated and attached to chama successfully',
+                    ResponseAlias::HTTP_OK
+                );
+            } else {
+                // Member doesn't exist, create a new member
+                $member = new Member();
+                $member->fill($request->all());
+                $member->user_id = $userId;
+                $member->save();
+
+                // Attach the new member to the chama
+                $chama = Chama::findOrFail($chamaId);
+                $chama->members()->attach($member->id);
+
+                return $this->success(
+                    $member,
+                    'Member created and attached to chama successfully',
+                    ResponseAlias::HTTP_OK
+                );
+            }
 
 
         } catch (\Exception $e) {
             return $this->error(
                 $e->getMessage(),
                 'Error creating member',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
