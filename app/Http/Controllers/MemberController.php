@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
@@ -19,7 +20,7 @@ class MemberController extends Controller
         $requestData = $request->all();
 
         // Check if a user with the provided phone number already exists
-        $existingUser = User::where('phone', $requestData['contactInformation'])->first();
+        $existingUser = User::where('phone', $requestData['phone'])->first();
 
         // If a user with the phone number exists, use their ID for the member
         if ($existingUser) {
@@ -29,7 +30,7 @@ class MemberController extends Controller
             $user = User::create([
                 'name' => $requestData['name'],
                 'email' => $requestData['email'],
-                'phone' => $requestData['contactInformation'],
+                'phone' => $requestData['phone'],
                 'password' => Hash::make($requestData['password']),
             ]);
             $user->assignRole('user');
@@ -41,7 +42,7 @@ class MemberController extends Controller
         $member->user_id = $userId;
         $member->first_name = $requestData['firstName'];
         $member->last_name = $requestData['lastName'];
-        $member->contact_information = $requestData['contactInformation'];
+        $member->phone = $requestData['phone'];
         $member->date_joined = $requestData['dateJoined'];
         $member->save();
 
@@ -63,6 +64,16 @@ class MemberController extends Controller
 
     public function index()
     {
+
+//        // Access user's name and ID
+//        $userName = Auth::user()->name;
+//        $userId = Auth::id();
+//
+//        // Access user's roles
+//        $userRoles = Auth::user()->roles;
+//
+//        return $userId;
+
         try {
             $members =  Member::all();
 

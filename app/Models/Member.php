@@ -13,7 +13,7 @@ class Member extends Model
         'user_id',
         'first_name',
         'last_name',
-        'contact_information',
+        'phone',
         'date_joined'
     ];
 
