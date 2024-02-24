@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use App\Models\Member;
+use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
 {
@@ -15,6 +17,15 @@ class MemberController extends Controller
     public function createMember(Request $request)
     {
         $requestData = $request->all();
+
+        // Create a new user
+        $user = User::create([
+            'name' => $requestData['name'],
+            'email' => $requestData['email'],
+            'phone' => $requestData['contactInformation'],
+            'password' => Hash::make($requestData['password']),
+        ]);
+        $user->assignRole('user');
 
         $member = new Member();
         $member->first_name = $requestData['firstName'];

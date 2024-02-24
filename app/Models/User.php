@@ -46,4 +46,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function chamas()
+    {
+        return $this->belongsToMany(Chama::class)->withPivot('role_id');
+    }
+
 }

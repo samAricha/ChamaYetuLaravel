@@ -85,5 +85,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('', TransactionTypeController::class);
     });
 
-
 });
