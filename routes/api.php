@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('chamaa_members')->group(function () {
         Route::apiResource('', ChamaMembersController::class);
         Route::post('add/member/{chamaa_id}', [ChamaMembersController::class, 'addMember']);
+        Route::post('showChamaaMembers/{chamaa_id}', [ChamaMembersController::class, 'showChamaaMembers']);
     });
 
     Route::prefix('contributions')->group(function () {

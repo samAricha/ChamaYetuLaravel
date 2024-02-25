@@ -185,6 +185,56 @@ class ChamaMembersController extends Controller
 
     }
 
+    public function showChamaaMembers($chamaId)
+    {
+
+        try {
+            $user = Auth::user();
+            $userId = $user->id;
+            $chama = Chama::findOrFail($chamaId);
+
+            // Check if the user is associated with this chama
+            if ($chama->users()->wherePivot('user_id', $userId)->exists()) {
+                // Now, you can retrieve the pivot record for this user and chama
+                $pivotRecord = $chama->users()->wherePivot('user_id', $userId)->first()->pivot;
+                // Now, you can get the role ID associated with this user in the context of the chama
+                $roleId = $pivotRecord->role_id;
+                if (!$roleId != 4) {
+                    return $this->error(
+                        null,
+                        'Unauthorized User',
+                        ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                    );
+                }else{
+                    $members = Member::whereHas('chamas', function ($query) use ($chamaId) {
+                        $query->where('chama_id', $chamaId);
+                    })->get();
+                    
+                    return $this->success(
+                        $members,
+                        'Contributions successfully fetched',
+                        ResponseAlias::HTTP_OK
+                    );
+
+                }
+            }else {
+                return $this->error(
+                    null,
+                    'Unauthorised User',
+                    ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error fetching chamaa members',
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+    }
+
     public function store(Request $request)
     {
 

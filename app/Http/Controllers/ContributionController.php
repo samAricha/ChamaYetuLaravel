@@ -149,7 +149,6 @@ class ContributionController extends Controller
     {
         try {
             $userId = Auth::id();
-            // Assuming $chamaId holds the Chama ID you have
             $chama = Chama::findOrFail($chamaId);
 
             // Check if the user is associated with this chama
