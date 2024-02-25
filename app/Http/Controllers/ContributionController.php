@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chama;
 use App\Models\ChamaAccount;
 use App\Models\Contribution;
+use App\Models\Member;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -49,8 +50,8 @@ class ContributionController extends Controller
                 );
             }
 
-            $contributions =  Contribution::all();
 
+            $contributions =  Contribution::all();
             return $this->success(
                 $contributions,
                 'contributions successfully fetched',
@@ -141,6 +142,81 @@ class ContributionController extends Controller
 
     public function show($contributionId)
     {
+
+    }
+
+    public function showChamaaContribution($chamaId)
+    {
+        try {
+            $userId = Auth::id();
+            // Assuming $chamaId holds the Chama ID you have
+            $chama = Chama::findOrFail($chamaId);
+
+            // Check if the user is associated with this chama
+            if ($chama->users()->wherePivot('user_id', $userId)->exists()) {
+                // Now, you can retrieve the pivot record for this user and chama
+                $pivotRecord = $chama->users()->wherePivot('user_id', $userId)->first()->pivot;
+                // Now, you can get the role ID associated with this user in the context of the chama
+                $roleId = $pivotRecord->role_id;
+
+                if ($roleId == 2){
+                    // Assuming $userId holds the user ID you have
+                    $member = Member::where('user_id', $userId)->first();
+
+                    if ($member) {
+                        $memberId = $member->id;
+                        $contributions = Contribution::query()
+                            ->join('chama_accounts', 'contributions.chama_account_id', '=', 'chama_accounts.id')
+                            ->where('chama_accounts.chama_id', $chamaId)
+                            ->where('contributions.member_id', $memberId)
+                            ->get();
+
+                        return $this->success(
+                            $contributions,
+                            'Contributions successfully fetched',
+                            ResponseAlias::HTTP_OK
+                        );
+                    } else {
+                        return $this->error(
+                            null,
+                            'Unauthorised User',
+                            ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }
+
+                }elseif ($roleId == 3){
+                    $contributions = Contribution::query()
+                        ->join('chama_accounts', 'contributions.chama_account_id', '=', 'chama_accounts.id')
+                        ->where('chama_accounts.chama_id', $chamaId)
+                        ->get();
+
+                    return $this->success(
+                        $contributions,
+                        'Contributions successfully fetched',
+                        ResponseAlias::HTTP_OK
+                    );
+                }
+            } else {
+                return $this->error(
+                    null,
+                    'Unauthorised User',
+                    ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
+
+            return $this->error(
+                null,
+                'Unauthorised User',
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+            );
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error creating member',
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
     }
 

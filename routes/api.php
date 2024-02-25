@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('contributions')->group(function () {
         Route::apiResource('', ContributionController::class);
+        Route::get('/chamaa_contributions/{chamaa_id}', [ContributionController::class, 'showChamaaContribution']);
     });
 
     Route::prefix('investments')->group(function () {

@@ -127,6 +127,41 @@ class ChamaMembersController extends Controller
     public function index()
     {
         try {
+            // Get the currently authenticated user
+            $user = Auth::user();
+
+            if ($user) {
+                // Check if the user has any roles
+                if ($user->roles->isNotEmpty()) {
+                    // Assuming you're interested in the first role
+                    $userRoles = $user->roles->pluck('id');
+
+                    if (!$userRoles->contains(4)) {
+                        return $this->error(
+                            null,
+                            'Unauthorized User',
+                            ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }
+                } else {
+                    return $this->error(
+                        null,
+                        'Unauthorised User',
+                        ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                    );
+                }
+            } else {
+                return $this->error(
+                    null,
+                    'Unauthenticated User',
+                    ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
+
+
+
+
             $chamaaMembers =  ChamaMembers::all();
 
             return $this->success(
