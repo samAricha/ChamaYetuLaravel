@@ -6,6 +6,7 @@ use App\Models\ChamaAccount;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ChamaAccountController extends Controller
 {
@@ -55,7 +56,7 @@ class ChamaAccountController extends Controller
             return $this->success(
                 $chamaAccount,
                 'Chama account created successfully',
-                Response::HTTP_OK
+                ResponseAlias::HTTP_OK
             );
 
 
@@ -63,7 +64,7 @@ class ChamaAccountController extends Controller
             return $this->error(
                 $e->getMessage(),
                 'Error creating chamaa account',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 

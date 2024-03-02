@@ -39,44 +39,51 @@ Route::post('/save/contribution', [ContributionController::class, 'store']);
 
 
 
-Route::prefix('chamaas')->group(function () {
-    Route::apiResource('', ChamaController::class);
-});
+//Route::middleware(['auth:api', 'role:admin'])->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::prefix('chamaa_accounts')->group(function () {
-    Route::apiResource('', ChamaAccountController::class);
-});
 
-Route::prefix('members')->group(function () {
-    Route::apiResource('', MemberController::class);
-});
+    Route::prefix('chamaas')->group(function () {
+        Route::apiResource('', ChamaController::class);
+    });
 
-Route::prefix('chamaa_members')->group(function () {
-    Route::apiResource('', ChamaMembersController::class);
-    Route::post('add/member/{chamaa_id}', [ChamaMembersController::class, 'addMember']);
+    Route::prefix('chamaa_accounts')->group(function () {
+        Route::apiResource('', ChamaAccountController::class);
+    });
 
-});
+    Route::prefix('members')->group(function () {
+        Route::apiResource('', MemberController::class);
+    });
 
-Route::prefix('contributions')->group(function () {
-    Route::apiResource('', ContributionController::class);
-});
+    Route::prefix('chamaa_members')->group(function () {
+        Route::apiResource('', ChamaMembersController::class);
+        Route::post('add/member/{chamaa_id}', [ChamaMembersController::class, 'addMember']);
+        Route::post('showChamaaMembers/{chamaa_id}', [ChamaMembersController::class, 'showChamaaMembers']);
+    });
 
-Route::prefix('investments')->group(function () {
-    Route::apiResource('', InvestmentController::class);
-});
+    Route::prefix('contributions')->group(function () {
+        Route::apiResource('', ContributionController::class);
+        Route::get('/chamaa_contributions/{chamaa_id}', [ContributionController::class, 'showChamaaContribution']);
+    });
 
-Route::prefix('loans')->group(function () {
-    Route::apiResource('', LoanController::class);
-});
+    Route::prefix('investments')->group(function () {
+        Route::apiResource('', InvestmentController::class);
+    });
 
-Route::prefix('transactions')->group(function () {
-    Route::apiResource('', TransactionController::class);
-});
+    Route::prefix('loans')->group(function () {
+        Route::apiResource('', LoanController::class);
+    });
 
-Route::prefix('account_types')->group(function () {
-    Route::apiResource('', AccountTypeController::class);
-});
+    Route::prefix('transactions')->middleware('auth:sanctum')->group(function () {
+        Route::apiResource('', TransactionController::class);
+    });
 
-Route::prefix('transaction_types')->group(function () {
-    Route::apiResource('', TransactionTypeController::class);
+    Route::prefix('account_types')->group(function () {
+        Route::apiResource('', AccountTypeController::class);
+    });
+
+    Route::prefix('transaction_types')->middleware('auth:sanctum')->group(function () {
+        Route::apiResource('', TransactionTypeController::class);
+    });
+
 });
