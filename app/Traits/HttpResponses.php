@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Contracts\Validation\Validator;
+
 trait HttpResponses {
 
     protected function success($data, string $message = null, int $code = 200)
@@ -14,13 +16,15 @@ trait HttpResponses {
         ], $code);
     }
 
-    protected function error($data, string $message = null, int $code)
+    protected function error($data, string $message = null, int $code, string $status = null,)
     {
         return response()->json([
             'isSuccessful' => false,
-            'status' => 'An error has occurred...',
+            'status' => $status?:'An error has occurred...',
             'message' => $message,
             'data' => $data
         ], $code);
     }
+
+
 }
