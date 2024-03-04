@@ -15,6 +15,16 @@ class Chama extends Model
         'date_formed'
     ];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'chama_user')->withPivot('role_id');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
     public function members()
     {
         return $this->belongsToMany(Member::class, 'chama_members');

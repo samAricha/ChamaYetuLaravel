@@ -6,6 +6,8 @@ use App\Models\Chama;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ChamaController extends Controller
 {
@@ -14,7 +16,41 @@ class ChamaController extends Controller
     public function index()
     {
         try {
+            // Get the currently authenticated user
+            $user = Auth::user();
+
+            if ($user) {
+                // Check if the user has any roles
+                if ($user->roles->isNotEmpty()) {
+                    // Assuming you're interested in the first role
+                    $userRoles = $user->roles->pluck('id');
+
+                    if (!$userRoles->contains(4)) {
+                        return $this->error(
+                            null,
+                            'Unauthorized User',
+                            ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                        );
+                    }
+                } else {
+                    return $this->error(
+                        null,
+                        'Unauthorised User',
+                        ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                    );
+                }
+            } else {
+                return $this->error(
+                    null,
+                    'Unauthenticated User',
+                    ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
+
+
             $chamaas =  Chama::all();
+
 
             return $this->success(
                 $chamaas,
@@ -27,7 +63,7 @@ class ChamaController extends Controller
             return $this->error(
                 $e->getMessage(),
                 'Error fetching Chamaas',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -52,10 +88,16 @@ class ChamaController extends Controller
             $chama->fill($request->all());
             $chama->save();
 
+            // Get User-id of requester
+            $userId = Auth::id();
+            // Attach the user to the chamaa role
+            $chama->users()->attach($userId, ['role_id' => 3]);
+
+
             return $this->success(
                 $chama,
                 'Chama created successfully',
-                Response::HTTP_OK
+                ResponseAlias::HTTP_OK
             );
 
 
@@ -63,7 +105,7 @@ class ChamaController extends Controller
             return $this->error(
                 $e->getMessage(),
                 'Error saving Chamaa',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
