@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rules;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 
 class RegisterUserRequest extends FormRequest
@@ -38,7 +39,7 @@ class RegisterUserRequest extends FormRequest
         return $this->error(
             [$validator->errors()->all()],
             'Validation Error',
-            Response::HTTP_OK
+            ResponseAlias::HTTP_OK
         );
     }
 }
