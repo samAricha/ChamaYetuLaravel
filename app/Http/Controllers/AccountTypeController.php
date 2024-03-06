@@ -7,6 +7,7 @@ use App\Models\TransactionType;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AccountTypeController extends Controller
 {
@@ -20,7 +21,7 @@ class AccountTypeController extends Controller
             return $this->success(
                 $accountTypes,
                 'Account Types successfully fetched',
-                Response::HTTP_OK
+                ResponseAlias::HTTP_OK
             );
 
 
@@ -28,7 +29,7 @@ class AccountTypeController extends Controller
             return $this->error(
                 $e->getMessage(),
                 'Error fetching Account Types',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }

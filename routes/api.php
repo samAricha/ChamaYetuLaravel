@@ -11,6 +11,7 @@ use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionTypeController;
+use App\Http\Controllers\WaitlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +33,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/auth/register', [ApiAuthController::class, 'register']);
 Route::post('/auth/login', [ApiAuthController::class, 'login']);
 
+Route::prefix('waitlist')->group(function () {
+    Route::apiResource('', WaitlistController::class);
+});
 
 
-Route::post('/save/member', [MemberController::class, 'createMember']);
-Route::post('/save/contribution', [ContributionController::class, 'store']);
+
+//Route::post('/save/member', [MemberController::class, 'createMember']);
+//Route::post('/save/contribution', [ContributionController::class, 'store']);
 
 
 
