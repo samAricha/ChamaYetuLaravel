@@ -20,7 +20,7 @@ class WaitlistController extends Controller
             return $this->success($waitlist, 'Waitlist retrieved successfully', 200);
         } catch (Exception $e) {
             // Return an error response if an exception occurs
-            return $this->error(null, 'An error occurred while retrieving the waitlist', 500);
+            return $this->error(null, 'An error occurred while retrieving the waitlist', 422);
         }
     }
 
@@ -43,7 +43,7 @@ class WaitlistController extends Controller
             return $this->success($waitlist, 'Form submitted successfully', 201);
         } catch (Exception $e) {
             // Return an error response if an exception occurs
-            return $this->error(null, 'An error occurred while processing the request', 500);
+            return $this->error(null, 'An error occurred while processing the request', 422);
         }
     }
 }
