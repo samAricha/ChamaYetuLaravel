@@ -6,6 +6,7 @@ use App\Models\TransactionType;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class TransactionTypeController extends Controller
 {
@@ -19,7 +20,7 @@ class TransactionTypeController extends Controller
             return $this->success(
                 $transactionTypes,
                 'Transaction Types successfully fetched',
-                Response::HTTP_OK
+                ResponseAlias::HTTP_OK
             );
 
 
@@ -27,7 +28,7 @@ class TransactionTypeController extends Controller
             return $this->error(
                 $e->getMessage(),
                 'Error fetching Transaction Types',
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }

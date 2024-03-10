@@ -20,6 +20,17 @@ class UserController extends Controller
 
     public function index()
     {
+        // Fetch the roles of the authenticated user
+        $userRoles = Auth::user()->roles->pluck('name')->toArray();
+        // Check if the user has the 'admin' role
+        $isAdmin = in_array('admin', $userRoles);
+        if (!$isAdmin){
+            return $this->error(
+                "user Unauthenticated",
+                'Error Getting Users',
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         // Access user's name and ID
         $userName = Auth::user()->name;
@@ -57,11 +68,23 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
+            // Fetch the roles of the authenticated user
+            $userRoles = Auth::user()->roles->pluck('name')->toArray();
+            // Check if the user has the 'admin' role
+            $isAdmin = in_array('admin', $userRoles);
+            if (!$isAdmin){
+                return $this->error(
+                    "user Unauthenticated",
+                    'Error Creating User',
+                    ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
             $requestData = $request->all();
             $chamaaId = $requestData['chamaaId'];
 
             // Check if a user with the provided phone number already exists
             $existingUser = User::where('phone', $requestData['phone'])->first();
+
 
             // If a user with the phone number exists, use their ID for the member
             if ($existingUser) {
