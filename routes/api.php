@@ -11,6 +11,7 @@ use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionTypeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WaitlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('members')->group(function () {
         Route::apiResource('', MemberController::class);
+    });
+
+    Route::prefix('users')->group(function () {
+        Route::apiResource('', UserController::class);
     });
 
     Route::prefix('chamaa_members')->group(function () {

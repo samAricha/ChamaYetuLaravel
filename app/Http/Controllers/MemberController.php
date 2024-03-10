@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class MemberController extends Controller
 {
@@ -72,32 +73,32 @@ class MemberController extends Controller
     public function index()
     {
 
-//        // Access user's name and ID
-//        $userName = Auth::user()->name;
-//        $userId = Auth::id();
-//
-//        // Access user's roles
-//        $userRoles = Auth::user()->roles;
-//
+        // Access user's name and ID
+        $userName = Auth::user()->name;
+        $userId = Auth::id();
+
+        // Access user's roles
+        $userRoles = Auth::user()->roles;
+
 //        return $userId;
 
-//        try {
-//            $members =  Member::all();
-//
-//            return $this->success(
-//                $members,
-//                'Members successfully fetched',
-//                Response::HTTP_OK
-//            );
-//
-//
-//        } catch (\Exception $e) {
-//            return $this->error(
-//                $e->getMessage(),
-//                'Error fetching Members',
-//                Response::HTTP_INTERNAL_SERVER_ERROR
-//            );
-//        }
+        try {
+            $members =  Member::all();
+
+            return $this->success(
+                $members,
+                'Members successfully fetched',
+                ResponseAlias::HTTP_OK
+            );
+
+
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getMessage(),
+                'Error fetching Members',
+                ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     public function show($id)
